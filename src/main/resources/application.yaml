@@ -1,0 +1,38 @@
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - TokenRelay
+      routes:
+        - id: student-server
+          uri: http://localhost:8020
+          predicates:
+            - Path=/students/**
+  security:
+    oauth2:
+      client:
+        provider:
+          my-keycloak-provider:
+            issuer-uri: http://localhost:8180/auth/realms/iit
+        registration:
+          keycloak-spring-gateway-client:
+            provider: my-keycloak-provider
+            client-id: iit-delhi
+            scope: openid
+            client-secret: cklqxUd7ai64popUQ09P1uBrvLeOEwXj
+            authorization-grant-type: authorization_code
+            redirect-uri: '{baseUrl}/login/oauth2/code/keycloak'
+
+server:
+  port: 9090
+
+logging:
+  level:
+    org:
+      springframework:
+        security:
+          web: DEBUG
+
+definition:
+  path:
+    postLogout: '/students/1'
